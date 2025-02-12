@@ -1,12 +1,11 @@
 package com.trilasoft.entity.order;
 
-import jakarta.persistence.Entity;
-import jakarta.persistence.GeneratedValue;
-import jakarta.persistence.Id;
-import jakarta.persistence.Table;
+import jakarta.persistence.*;
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
+
+import java.util.List;
 
 @Entity
 @Table(name = "ORDER_DETAILS")
@@ -17,13 +16,12 @@ import lombok.NoArgsConstructor;
 public class OrderDetails {
 	
 	@Id
-	@GeneratedValue
+	@GeneratedValue(strategy = GenerationType.AUTO)
 	private long id;
 	private String quantity;
 	private String price;
-//	@CreationTimestamp
-//	private Date created;
-//	@UpdateTimestamp
-//	private Date updated;
+	@OneToMany(cascade = CascadeType.ALL,fetch = FetchType.EAGER)
+	@JoinColumn(name = "orderId" , referencedColumnName = "id")
+	List<Items> itemsList;
 
 }

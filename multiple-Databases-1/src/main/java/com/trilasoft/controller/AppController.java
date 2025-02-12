@@ -5,11 +5,7 @@ import java.util.List;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 
 import com.trilasoft.dto.OrderDetailsDto;
 import com.trilasoft.dto.PaymentDetailsDto;
@@ -33,10 +29,13 @@ public class AppController {
 //	
 	@PostMapping("/order")
 	public ResponseEntity<OrderDetails> saveOrderDetails(@RequestBody OrderDetailsDto request){
+
+		OrderDetails entityRequest=new OrderDetails();
+		entityRequest.setPrice(request.getPrice());
+		entityRequest.setQuantity(request.getQuantity());
+		entityRequest.setItemsList(request.getItemsList());
 		
-		//OrderDetails entity = modelMapper.map(request, OrderDetails.class);
-		
-		OrderDetails entity =orderRepo.save(request);
+		OrderDetails entity =orderRepo.save(entityRequest);
 		
 		return new ResponseEntity<OrderDetails>(entity,HttpStatus.OK);
 	}
@@ -53,6 +52,12 @@ public class AppController {
 	public List<OrderDetails> getOrders(){
 		return orderRepo.getOrderList();
 	}
+
+	@DeleteMapping("/deleteorder/{id}")
+	public ResponseEntity<String> deleteOrders(@PathVariable Long id){
+		 orderRepo.deleteById(id);
+		 return new ResponseEntity<>("order deleted successfully",HttpStatus.OK);
+    }
 	
 
 }
